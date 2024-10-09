@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+.services-container {
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.services-header {
+    text-align: center;
+    margin-bottom: 30px;
+    animation: fadeIn 1s ease-out; /* Apply fadeIn animation to the header */
+
+}
+
+.services-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #fff;
+    animation: fadeIn 1s ease-out; /* Apply fadeIn animation to the header */
+}
+
+.services-header p {
+    font-size: 1.2rem;
+    color: #aaa;
+    animation: fadeIn 1.5s ease-out; /* Apply fadeIn animation to the header */
+
+}
+
+.services-main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeIn 2s ease-out; /* Apply fadeIn animation to the form */
+}
+
+.service-category {
+    background-color: #111;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.service-category h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.service-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+}
+
+.service-item:last-child {
+    border-bottom: none;
+}
+
+.service-name {
+    font-size: 1.2rem;
+}
+
+.service-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+}

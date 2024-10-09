@@ -1,5 +1,6 @@
-import { Text } from "@react-three/drei";
+import { Text, Html } from "@react-three/drei";
 import { fadeOnBeforeCompileFlat } from "../utils/fadeMaterial";
+import { Link } from "react-router-dom";
 
 export const TextSection = ({ title, subtitle, ...props }) => {
   return (
@@ -36,6 +37,12 @@ export const TextSection = ({ title, subtitle, ...props }) => {
           onBeforeCompile={fadeOnBeforeCompileFlat}
         />
       </Text>
+
+      {/* <Html>
+        <button style={{ fontSize: "1rem", padding: "0.5rem 1rem", cursor: "pointer" }}>
+          Go to Page
+        </button>
+      </Html> */}
     </group>
   );
 };

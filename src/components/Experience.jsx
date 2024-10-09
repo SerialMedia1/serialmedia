@@ -1,5 +1,5 @@
 import { Float, PerspectiveCamera, useScroll } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { gsap } from "gsap";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
@@ -9,7 +9,9 @@ import { fadeOnBeforeCompile } from "../utils/fadeMaterial";
 import { Airplane } from "./Airplane";
 import { Background } from "./Background";
 import { Cloud } from "./Cloud";
+import { Planet } from "./Planet";
 import { Speed } from "./Speed";
+import StarBackground from "./StarBackground"; // Adjust path as needed
 import { TextSection } from "./TextSection";
 
 const LINE_NB_POINTS = 1000;
@@ -22,7 +24,7 @@ const FRICTION_DISTANCE = 42;
 export const Experience = () => {
   const curvePoints = useMemo(
     () => [
-      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(0.0, 0, 0),
       new THREE.Vector3(0, 0, -CURVE_DISTANCE),
       new THREE.Vector3(100, 0, -2 * CURVE_DISTANCE),
       new THREE.Vector3(-100, 0, -3 * CURVE_DISTANCE),
@@ -30,6 +32,52 @@ export const Experience = () => {
       new THREE.Vector3(0, 0, -5 * CURVE_DISTANCE),
       new THREE.Vector3(0, 0, -6 * CURVE_DISTANCE),
       new THREE.Vector3(0, 0, -7 * CURVE_DISTANCE),
+    ],
+    []
+  );
+
+  const planets = useMemo(
+    () => [
+      {
+        position: new THREE.Vector3(-0.25, -0.25, 0),
+        fileName: 'earth', 
+        scale: 0.2
+      },
+      {
+        position: new THREE.Vector3(-4, -1, -CURVE_DISTANCE), 
+        fileName: 'mars',
+        scale: 1.3
+      },
+      {
+        position: new THREE.Vector3(108, 0, -2 * CURVE_DISTANCE),
+        fileName: 'mercury', 
+        scale: 9
+      },
+      {
+        position: new THREE.Vector3(-140, 6, -3 * CURVE_DISTANCE),
+        fileName: 'saturn', 
+        scale: 10
+      },
+      {
+        position: new THREE.Vector3(120, 0, -4 * CURVE_DISTANCE),
+        fileName: 'venus',
+        scale: 10
+      },
+      {
+        position: new THREE.Vector3(60, 0, -5 * CURVE_DISTANCE),
+        fileName: 'neptune',  
+        scale: 1
+      },
+      {
+        position: new THREE.Vector3(100, 4, -6 * CURVE_DISTANCE),
+        fileName: 'uranus',
+        scale: 0.03
+      },
+      {
+        position: new THREE.Vector3(0, 8, -7 * CURVE_DISTANCE),
+        fileName: 'jupiter', 
+        scale: 10
+      },
     ],
     []
   );
@@ -46,220 +94,239 @@ export const Experience = () => {
       {
         cameraRailDist: -1,
         position: new Vector3(
-          curvePoints[1].x - 3,
-          curvePoints[1].y,
-          curvePoints[1].z
+          curvePoints[1].x - 2,
+          curvePoints[1].y + 1, 
+          curvePoints[1].z -1
         ),
-        subtitle: `Welcome to Wawatmos,
+        subtitle: `Welcome to Serial Media,
 Have a seat and enjoy the ride!`,
       },
       {
         cameraRailDist: 1.5,
         position: new Vector3(
           curvePoints[2].x + 2,
-          curvePoints[2].y,
-          curvePoints[2].z
+          curvePoints[2].y + 0.5,
+          curvePoints[2].z + 15
         ),
-        title: "Services",
-        subtitle: `Do you want a drink?
-We have a wide range of beverages!`,
+        title: "About us",
+        subtitle: `We help brands grow through innovative marketing strategies. Let’s elevate your business together!`,
       },
       {
         cameraRailDist: -1,
         position: new Vector3(
-          curvePoints[3].x - 3,
-          curvePoints[3].y,
-          curvePoints[3].z
+          curvePoints[3].x - 5,
+          curvePoints[3].y + 0.5,
+          curvePoints[3].z + 12
         ),
-        title: "Fear of flying?",
-        subtitle: `Our flight attendants will help you have a great journey`,
+        title: "Services",
+        subtitle: `Learn more about what we offer`,
       },
       {
         cameraRailDist: 1.5,
         position: new Vector3(
-          curvePoints[4].x + 3.5,
-          curvePoints[4].y,
-          curvePoints[4].z - 12
+          curvePoints[4].x ,
+          curvePoints[4].y + 0.5,
+          curvePoints[4].z + 10
         ),
-        title: "Movies",
-        subtitle: `We provide a large selection of medias, we highly recommend you Porco Rosso during the flight`,
+        title: "Our work",
+        subtitle: `Learn more about our work`,
       },
+      {
+        cameraRailDist: -1,
+        position: new Vector3(
+          curvePoints[5].x + 3.5,
+          curvePoints[5].y,
+          curvePoints[5].z + 100
+        ),
+        title: "Contact us",
+        subtitle: `Get in touch`,
+      },
+      {
+        cameraRailDist: 1.5,
+        position: new Vector3(
+          curvePoints[6].x + 3.5,
+          curvePoints[6].y+1,
+          curvePoints[6].z - 18
+        ),
+        title: "Careers",
+        subtitle: `Interested in being part of a hands on team? Apply today!`,
+      }
     ];
   }, []);
 
-  const clouds = useMemo(
-    () => [
-      // STARTING
-      {
-        position: new Vector3(-3.5, -3.2, -7),
-      },
-      {
-        position: new Vector3(3.5, -4, -10),
-      },
-      {
-        scale: new Vector3(4, 4, 4),
-        position: new Vector3(-18, 0.2, -68),
-        rotation: new Euler(-Math.PI / 5, Math.PI / 6, 0),
-      },
-      {
-        scale: new Vector3(2.5, 2.5, 2.5),
-        position: new Vector3(10, -1.2, -52),
-      },
-      // FIRST POINT
-      {
-        scale: new Vector3(4, 4, 4),
-        position: new Vector3(
-          curvePoints[1].x + 10,
-          curvePoints[1].y - 4,
-          curvePoints[1].z + 64
-        ),
-      },
-      {
-        scale: new Vector3(3, 3, 3),
-        position: new Vector3(
-          curvePoints[1].x - 20,
-          curvePoints[1].y + 4,
-          curvePoints[1].z + 28
-        ),
-        rotation: new Euler(0, Math.PI / 7, 0),
-      },
-      {
-        rotation: new Euler(0, Math.PI / 7, Math.PI / 5),
-        scale: new Vector3(5, 5, 5),
-        position: new Vector3(
-          curvePoints[1].x - 13,
-          curvePoints[1].y + 4,
-          curvePoints[1].z - 62
-        ),
-      },
-      {
-        rotation: new Euler(Math.PI / 2, Math.PI / 2, Math.PI / 3),
-        scale: new Vector3(5, 5, 5),
-        position: new Vector3(
-          curvePoints[1].x + 54,
-          curvePoints[1].y + 2,
-          curvePoints[1].z - 82
-        ),
-      },
-      {
-        scale: new Vector3(5, 5, 5),
-        position: new Vector3(
-          curvePoints[1].x + 8,
-          curvePoints[1].y - 14,
-          curvePoints[1].z - 22
-        ),
-      },
-      // SECOND POINT
-      {
-        scale: new Vector3(3, 3, 3),
-        position: new Vector3(
-          curvePoints[2].x + 6,
-          curvePoints[2].y - 7,
-          curvePoints[2].z + 50
-        ),
-      },
-      {
-        scale: new Vector3(2, 2, 2),
-        position: new Vector3(
-          curvePoints[2].x - 2,
-          curvePoints[2].y + 4,
-          curvePoints[2].z - 26
-        ),
-      },
-      {
-        scale: new Vector3(4, 4, 4),
-        position: new Vector3(
-          curvePoints[2].x + 12,
-          curvePoints[2].y + 1,
-          curvePoints[2].z - 86
-        ),
-        rotation: new Euler(Math.PI / 4, 0, Math.PI / 3),
-      },
-      // THIRD POINT
-      {
-        scale: new Vector3(3, 3, 3),
-        position: new Vector3(
-          curvePoints[3].x + 3,
-          curvePoints[3].y - 10,
-          curvePoints[3].z + 50
-        ),
-      },
-      {
-        scale: new Vector3(3, 3, 3),
-        position: new Vector3(
-          curvePoints[3].x - 10,
-          curvePoints[3].y,
-          curvePoints[3].z + 30
-        ),
-        rotation: new Euler(Math.PI / 4, 0, Math.PI / 5),
-      },
-      {
-        scale: new Vector3(4, 4, 4),
-        position: new Vector3(
-          curvePoints[3].x - 20,
-          curvePoints[3].y - 5,
-          curvePoints[3].z - 8
-        ),
-        rotation: new Euler(Math.PI, 0, Math.PI / 5),
-      },
-      {
-        scale: new Vector3(5, 5, 5),
-        position: new Vector3(
-          curvePoints[3].x + 0,
-          curvePoints[3].y - 5,
-          curvePoints[3].z - 98
-        ),
-        rotation: new Euler(0, Math.PI / 3, 0),
-      },
-      // FOURTH POINT
-      {
-        scale: new Vector3(2, 2, 2),
-        position: new Vector3(
-          curvePoints[4].x + 3,
-          curvePoints[4].y - 10,
-          curvePoints[4].z + 2
-        ),
-      },
-      {
-        scale: new Vector3(3, 3, 3),
-        position: new Vector3(
-          curvePoints[4].x + 24,
-          curvePoints[4].y - 6,
-          curvePoints[4].z - 42
-        ),
-        rotation: new Euler(Math.PI / 4, 0, Math.PI / 5),
-      },
-      {
-        scale: new Vector3(3, 3, 3),
-        position: new Vector3(
-          curvePoints[4].x - 4,
-          curvePoints[4].y + 9,
-          curvePoints[4].z - 62
-        ),
-        rotation: new Euler(Math.PI / 3, 0, Math.PI / 3),
-      },
-      // FINAL
-      {
-        scale: new Vector3(3, 3, 3),
-        position: new Vector3(
-          curvePoints[7].x + 12,
-          curvePoints[7].y - 5,
-          curvePoints[7].z + 60
-        ),
-        rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),
-      },
-      {
-        scale: new Vector3(3, 3, 3),
-        position: new Vector3(
-          curvePoints[7].x - 12,
-          curvePoints[7].y + 5,
-          curvePoints[7].z + 120
-        ),
-        rotation: new Euler(Math.PI / 4, Math.PI / 6, 0),
-      },
-    ],
-    []
-  );
+  // const clouds = useMemo(
+  //   () => [
+  //     // STARTING
+  //     {
+  //       position: new Vector3(-3.5, -3.2, -7),
+  //     },
+  //     {
+  //       position: new Vector3(3.5, -4, -10),
+  //     },
+  //     {
+  //       scale: new Vector3(4, 4, 4),
+  //       position: new Vector3(-18, 0.2, -68),
+  //       rotation: new Euler(-Math.PI / 5, Math.PI / 6, 0),
+  //     },
+  //     {
+  //       scale: new Vector3(2.5, 2.5, 2.5),
+  //       position: new Vector3(10, -1.2, -52),
+  //     },
+  //     // FIRST POINT
+  //     {
+  //       scale: new Vector3(4, 4, 4),
+  //       position: new Vector3(
+  //         curvePoints[1].x + 10,
+  //         curvePoints[1].y - 4,
+  //         curvePoints[1].z + 64
+  //       ),
+  //     },
+  //     {
+  //       scale: new Vector3(3, 3, 3),
+  //       position: new Vector3(
+  //         curvePoints[1].x - 20,
+  //         curvePoints[1].y + 4,
+  //         curvePoints[1].z + 28
+  //       ),
+  //       rotation: new Euler(0, Math.PI / 7, 0),
+  //     },
+  //     {
+  //       rotation: new Euler(0, Math.PI / 7, Math.PI / 5),
+  //       scale: new Vector3(5, 5, 5),
+  //       position: new Vector3(
+  //         curvePoints[1].x - 13,
+  //         curvePoints[1].y + 4,
+  //         curvePoints[1].z - 62
+  //       ),
+  //     },
+  //     {
+  //       rotation: new Euler(Math.PI / 2, Math.PI / 2, Math.PI / 3),
+  //       scale: new Vector3(5, 5, 5),
+  //       position: new Vector3(
+  //         curvePoints[1].x + 54,
+  //         curvePoints[1].y + 2,
+  //         curvePoints[1].z - 82
+  //       ),
+  //     },
+  //     {
+  //       scale: new Vector3(5, 5, 5),
+  //       position: new Vector3(
+  //         curvePoints[1].x + 8,
+  //         curvePoints[1].y - 14,
+  //         curvePoints[1].z - 22
+  //       ),
+  //     },
+  //     // SECOND POINT
+  //     {
+  //       scale: new Vector3(3, 3, 3),
+  //       position: new Vector3(
+  //         curvePoints[2].x + 6,
+  //         curvePoints[2].y - 7,
+  //         curvePoints[2].z + 50
+  //       ),
+  //     },
+  //     {
+  //       scale: new Vector3(2, 2, 2),
+  //       position: new Vector3(
+  //         curvePoints[2].x - 2,
+  //         curvePoints[2].y + 4,
+  //         curvePoints[2].z - 26
+  //       ),
+  //     },
+  //     {
+  //       scale: new Vector3(4, 4, 4),
+  //       position: new Vector3(
+  //         curvePoints[2].x + 12,
+  //         curvePoints[2].y + 1,
+  //         curvePoints[2].z - 86
+  //       ),
+  //       rotation: new Euler(Math.PI / 4, 0, Math.PI / 3),
+  //     },
+  //     // THIRD POINT
+  //     {
+  //       scale: new Vector3(3, 3, 3),
+  //       position: new Vector3(
+  //         curvePoints[3].x + 3,
+  //         curvePoints[3].y - 10,
+  //         curvePoints[3].z + 50
+  //       ),
+  //     },
+  //     {
+  //       scale: new Vector3(3, 3, 3),
+  //       position: new Vector3(
+  //         curvePoints[3].x - 10,
+  //         curvePoints[3].y,
+  //         curvePoints[3].z + 30
+  //       ),
+  //       rotation: new Euler(Math.PI / 4, 0, Math.PI / 5),
+  //     },
+  //     {
+  //       scale: new Vector3(4, 4, 4),
+  //       position: new Vector3(
+  //         curvePoints[3].x - 20,
+  //         curvePoints[3].y - 5,
+  //         curvePoints[3].z - 8
+  //       ),
+  //       rotation: new Euler(Math.PI, 0, Math.PI / 5),
+  //     },
+  //     {
+  //       scale: new Vector3(5, 5, 5),
+  //       position: new Vector3(
+  //         curvePoints[3].x + 0,
+  //         curvePoints[3].y - 5,
+  //         curvePoints[3].z - 98
+  //       ),
+  //       rotation: new Euler(0, Math.PI / 3, 0),
+  //     },
+  //     // FOURTH POINT
+  //     {
+  //       scale: new Vector3(2, 2, 2),
+  //       position: new Vector3(
+  //         curvePoints[4].x + 3,
+  //         curvePoints[4].y - 10,
+  //         curvePoints[4].z + 2
+  //       ),
+  //     },
+  //     {
+  //       scale: new Vector3(3, 3, 3),
+  //       position: new Vector3(
+  //         curvePoints[4].x + 24,
+  //         curvePoints[4].y - 6,
+  //         curvePoints[4].z - 42
+  //       ),
+  //       rotation: new Euler(Math.PI / 4, 0, Math.PI / 5),
+  //     },
+  //     {
+  //       scale: new Vector3(3, 3, 3),
+  //       position: new Vector3(
+  //         curvePoints[4].x - 4,
+  //         curvePoints[4].y + 9,
+  //         curvePoints[4].z - 62
+  //       ),
+  //       rotation: new Euler(Math.PI / 3, 0, Math.PI / 3),
+  //     },
+  //     // FINAL
+  //     {
+  //       scale: new Vector3(3, 3, 3),
+  //       position: new Vector3(
+  //         curvePoints[7].x + 12,
+  //         curvePoints[7].y - 5,
+  //         curvePoints[7].z + 60
+  //       ),
+  //       rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),
+  //     },
+  //     {
+  //       scale: new Vector3(3, 3, 3),
+  //       position: new Vector3(
+  //         curvePoints[7].x - 12,
+  //         curvePoints[7].y + 5,
+  //         curvePoints[7].z + 120
+  //       ),
+  //       rotation: new Euler(Math.PI / 4, Math.PI / 6, 0),
+  //     },
+  //   ],
+  //   []
+  // );
 
   const shape = useMemo(() => {
     const shape = new THREE.Shape();
@@ -499,10 +566,13 @@ We have a wide range of beverages!`,
   return useMemo(
     () => (
       <>
-        <directionalLight position={[0, 3, 1]} intensity={0.1} />
+        <ambientLight intensity={0.5}/>
+        <directionalLight position={[0, 3, 1]} intensity={0.5} />
+
         <group ref={cameraGroup}>
           <Speed />
           <Background backgroundColors={backgroundColors} />
+          <StarBackground />
           <group ref={cameraRail}>
             <PerspectiveCamera
               ref={camera}
@@ -512,11 +582,11 @@ We have a wide range of beverages!`,
             />
           </group>
           <group ref={airplane}>
-            <Float floatIntensity={1} speed={1.5} rotationIntensity={0.5}>
+            <Float floatIntensity={1} speed={1} rotationIntensity={0.8}>
               <Airplane
-                rotation-y={Math.PI / 2}
-                scale={[0.2, 0.2, 0.2]}
-                position-y={0.1}
+                rotation-y={-Math.PI}
+                scale={[0.15, 0.15, 0.15]}
+                position-y={-0.6}
               />
             </Float>
           </group>
@@ -549,9 +619,13 @@ We have a wide range of beverages!`,
           </mesh>
         </group>
 
-        {/* CLOUDS */}
+        {/* CLOUDS
         {clouds.map((cloud, index) => (
           <Cloud sceneOpacity={sceneOpacity} {...cloud} key={index} />
+        ))} */}
+        {/* PLANETS */}
+        {planets.map((planet, index) => (
+          <Planet key={index} position={planet.position} fileName={planet.fileName} scale={planet.scale || 0.1} />
         ))}
       </>
     ),

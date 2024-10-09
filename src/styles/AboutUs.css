@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter&display=swap');
+
+html, body {
+    height: 100%;
+    margin: 0;
+    background-color: #000; /* Dark background */
+    color: #fff; /* Default text color */
+    font-family: 'Inter', sans-serif; /* Default font */
+}
+
+.about-us-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 50px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.9); /* Darker background */
+    border-radius: 12px;
+}
+
+.about-us-header {
+    margin-bottom: 40px;
+}
+
+.about-us-header h1 {
+    font-family: 'DM Serif Display', serif; /* Header font */
+    font-size: 3.5rem; /* Larger font size */
+    color: #b8f209; /* Accent color */
+    margin-bottom: 10px;
+    animation: fadeIn 1s ease-out; /* Animation */
+}
+
+.about-us-header p {
+    font-size: 1.5rem;
+    color: #fff; /* Text color */
+}
+
+.about-us-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.about-us-info {
+    max-width: 800px;
+    margin-bottom: 40px;
+}
+
+.about-us-info h2 {
+    font-size: 2.5rem; /* Larger subheading font size */
+    color: #b8f209; /* Accent color */
+    margin-bottom: 10px;
+}
+
+.about-us-info p {
+    font-size: 1.2rem;
+    color: #ddd; /* Lighter text for contrast */
+}
+
+.about-us-team {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px; /* Space between team members */
+}
+
+.team-member {
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2); /* Soft shadow */
+    margin: 15px;
+    padding: 20px;
+    text-align: center;
+    width: 250px; /* Fixed width for cards */
+    transition: transform 0.3s, box-shadow 0.3s; /* Animation on hover */
+}
+
+.team-member:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3); /* Enhanced shadow on hover */
+}
+
+.team-member img {
+    border-radius: 50%;
+    width: 150px; /* Increased size */
+    height: 150px; /* Increased size */
+    object-fit: cover; /* Ensure images fit well */
+}
+
+.member-info h3 {
+    margin-top: 10px;
+    font-size: 1.5rem; /* Larger font size for names */
+    color: #b8f209; /* Accent color */
+}
+
+.member-info p {
+    font-size: 1rem;
+    color: #ddd; /* Lighter text for contrast */
+}
+
+.about-us-footer {
+    margin-top: 40px;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.about-us-team {
+    text-align: center;
+}
+
+.team-scroll {
+    display: flex;
+    overflow-x: auto; /* Allow horizontal scrolling */
+    padding: 20px 0; /* Add padding for aesthetics */
+    scroll-behavior: smooth; /* Smooth scrolling effect */
+}
+
+.team-member {
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2); /* Soft shadow */
+    margin: 15px;
+    padding: 20px;
+    text-align: center;
+    width: 250px; /* Fixed width for cards */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.team-member:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3); 
+}
+
+.team-member img {
+    border-radius: 50%;
+    width: 150px; /* Increased size */
+    height: 150px; /* Increased size */
+    object-fit: cover; /* Ensure images fit well */
+}
+
+.member-info h3 {
+    margin-top: 10px;
+    font-size: 1.5rem; /* Larger font size for names */
+    color: #b8f209; /* Accent color */
+}
+
+.member-info p {
+    font-size: 1rem;
+    color: #ddd; /* Lighter text for contrast */
+}
+
+.about-us-team h2 {
+    margin-bottom: 20px; /* Add margin below the heading for spacing */
+    text-align: center; /* Center the heading text */
+    color: #b8f209; /* You can keep the accent color for consistency */
+}
